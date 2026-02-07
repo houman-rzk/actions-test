@@ -12,6 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug context
+        run: |
+          echo "repository=${{ github.repository }}"
+          echo "repository_owner=${{ github.repository_owner }}"
+          echo "actor=${{ github.actor }}"
+
       - name: Log in to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
