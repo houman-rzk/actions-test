@@ -19,12 +19,12 @@ jobs:
 
       - name: Build image
         run: |
-          IMAGE="ghcr.io/${{ github.repository_owner }}/actions-test"
+          IMAGE="ghcr.io/${{ github.repository }}"
           TAG="${{ github.sha }}"
           docker build -t $IMAGE:$TAG .
   
       - name: Push image
         run: |
-          IMAGE="ghcr.io/${{ github.repository_owner }}/actions-test"
+          IMAGE="ghcr.io/${{ github.repository }}"
           TAG="${{ github.sha }}"
           docker push $IMAGE:$TAG
