@@ -49,6 +49,7 @@ jobs:
         id: meta
         run: |
           IMAGE="ghcr.io/${{ github.repository }}"
+          TAG="${GITHUB_SHA}"
           echo "image=$IMAGE" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
