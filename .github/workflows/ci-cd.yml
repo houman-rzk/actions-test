@@ -4,10 +4,6 @@ on:
   push:
     branches: [ "master" ]
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   test:
     name: Test
@@ -38,6 +34,9 @@ jobs:
     name: Build and push image
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     outputs:
       image: ${{ steps.meta.outputs.image }}
       tag: ${{ steps.meta.outputs.tag }}
@@ -74,3 +73,26 @@ jobs:
             ${{ steps.meta.outputs.image }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  security_scan:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      contents: read
+
+    steps:
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.tag }}
+          format: sarif
+          output: trivy-results.sarif
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
