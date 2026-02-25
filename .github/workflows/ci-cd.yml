@@ -120,8 +120,8 @@ jobs:
       - name: Select image tag to deploy
         id: meta
         run: |
-          echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
-          echo "tag=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
+          echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
+          echo "tag=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
 
       - name: Deploy to production (SSH + docker compose)
         env:
@@ -132,10 +132,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+
+          # Copy docker-compose.yml to server
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.yml $SSH_USER@$SSH_HOST:/opt/actions-test
+
+          # SSH to the server and run docker compose
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
-            export IMAGE=${{ steps.meta.output.image }}
-            export TAG=${{ steps.meta.output.tag }}
+            export IMAGE=${{ env.image }}
+            export TAG=${{ env.tag }}
             cd /opt/actions-test
             docker compose pull
             docker compose up -d
