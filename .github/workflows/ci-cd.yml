@@ -121,7 +121,7 @@ jobs:
         id: meta
         run: |
           echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
-          echo "tag=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
+          echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Deploy to production (SSH + docker compose)
         env:
