@@ -107,3 +107,28 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results.sarif
+
+  deploy:
+    name: Deploy
+    needs: security_scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Select image tag to deploy
+        id: meta
+        run: |
+          echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
+          echo "tag=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
+
+      - name: Deploy to production (SSH + docker compose)
+        env:
+          SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+          SSH_USER: ${{ secrets.PROD_SSH_USER }}
+          SSH_KEY:  ${{ secrets.PROD_SSH_KEY }}
+          IMAGE: ${{ steps.meta.outputs.image }}
+          TAG:   ${{ steps.meta.outputs.tag }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -t "ls /" 
