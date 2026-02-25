@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA}
+    image: ${IMAGE}:${TAG}
     build: .
     ports:
       - "80:80"
