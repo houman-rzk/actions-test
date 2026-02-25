@@ -114,6 +114,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Select image tag to deploy
         id: meta
         run: |
