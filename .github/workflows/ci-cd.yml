@@ -117,13 +117,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Select image tag to deploy
         id: meta
         run: |
@@ -148,6 +141,7 @@ jobs:
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
             cd /opt/actions-test
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             docker compose pull
             docker compose up -d
           EOF
