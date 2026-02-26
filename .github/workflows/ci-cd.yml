@@ -142,7 +142,7 @@ jobs:
             cd /opt/actions-test
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose -f docker-compose.staging.yml pull
-            docker compose -f docker-compose.staging.yml -p prod up -d
+            docker compose -f docker-compose.staging.yml -p staging up -d
           EOF
 
   deploy_production:
