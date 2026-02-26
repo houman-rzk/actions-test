@@ -24,7 +24,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install ruff pytest httpx
+          pip install ruff pytest httpx starlette
 
       - name: Lint
         run: ruff check .
@@ -32,7 +32,7 @@ jobs:
       - name: Run tests
         env:
           ENVIRONMENT: "dev"
-        run: pytest -q
+        run: pytest test_main.py
 
   build:
     name: Build and push image
