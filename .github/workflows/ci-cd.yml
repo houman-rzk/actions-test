@@ -30,6 +30,8 @@ jobs:
         run: ruff check .
 
       - name: Run tests
+        env:
+          ENVIRONMENT: "dev"
         run: pytest -q
 
   build:
@@ -108,11 +110,11 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
-  deploy_staging:
-    name: Deploy staging
+  deploy_dev:
+    name: Deploy dev
     needs: security_scan
     runs-on: ubuntu-latest
-    environment: staging
+    environment: dev
 
     steps:
       - name: Checkout code
@@ -124,7 +126,7 @@ jobs:
           echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
-      - name: Deploy to staging
+      - name: Deploy to dev
         env:
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}
@@ -134,22 +136,22 @@ jobs:
           echo "$SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.staging.yml $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.dev.yml $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
             cd /opt/actions-test
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose -f docker-compose.staging.yml pull
-            docker compose -f docker-compose.staging.yml -p staging up -d
+            docker compose -f docker-compose.dev.yml pull
+            docker compose -f docker-compose.dev.yml -p dev up -d
           EOF
 
-  deploy_production:
+  deploy_prod:
     name: Deploy production
-    needs: deploy_staging
+    needs: deploy_dev
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod
 
     steps:
       - name: Checkout code
@@ -161,7 +163,7 @@ jobs:
           echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
-      - name: Deploy to production
+      - name: Deploy to prod
         env:
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}

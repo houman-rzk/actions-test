@@ -3,15 +3,15 @@ services:
   build: .
   container_name: backend
   environment:
-   - ENVIRONMENT=prod
+   - ENVIRONMENT=dev
   restart: unless-stopped
 
  caddy:
   image: caddy:2.7
   container_name: caddy
   ports:
-   - "80:80"
-   - "443:443"
+   - "8080:80"
+   - "4443:443"
   volumes:
    - ./Caddyfile:/etc/caddy/Caddyfile
    - caddy_data:/data
