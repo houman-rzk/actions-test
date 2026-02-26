@@ -1,6 +1,6 @@
 services:
  backend:
-  build: .
+  image: $IMAGE:TAG
   container_name: backend
   environment:
    - ENVIRONMENT=dev
