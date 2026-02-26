@@ -32,7 +32,7 @@ jobs:
       - name: Run tests
         env:
           ENVIRONMENT: "dev"
-        run: pytest -q
+        run: pytest
 
   build:
     name: Build and push image
