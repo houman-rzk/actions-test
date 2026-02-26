@@ -1,6 +1,6 @@
 services:
  backend:
-  image: $IMAGE:TAG
+  image: $IMAGE:$TAG
   container_name: backend
   environment:
    - ENVIRONMENT=prod
