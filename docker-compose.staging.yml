@@ -1,0 +1,7 @@
+services:
+  app:
+    image: ${IMAGE}:${TAG}
+    ports:
+      - "8080:80"
+    environment:
+      ENVIRONMENT: staging

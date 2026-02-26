@@ -3,3 +3,5 @@ services:
     image: ${IMAGE}:${TAG}
     ports:
       - "80:80"
+    environment:
+      ENVIRONMENT: production

@@ -134,17 +134,15 @@ jobs:
           echo "$SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          # Copy docker-compose.yml to server
-          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.yml $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.staging.yml $SSH_USER@$SSH_HOST:/opt/actions-test
 
-          # SSH to the server and run docker compose
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
             cd /opt/actions-test
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose pull
-            docker compose up -d
+            docker compose -f docker-compose.staging.yml pull
+            docker compose -f docker-compose.staging.yml -p prod up -d
           EOF
 
   deploy_production:
@@ -173,15 +171,13 @@ jobs:
           echo "$SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          # Copy docker-compose.yml to server
-          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.yml $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.prod.yml $SSH_USER@$SSH_HOST:/opt/actions-test
 
-          # SSH to the server and run docker compose
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
             cd /opt/actions-test
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose pull
-            docker compose up -d
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml -p prod up -d
           EOF
