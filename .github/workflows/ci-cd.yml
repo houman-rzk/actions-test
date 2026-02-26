@@ -32,7 +32,7 @@ jobs:
       - name: Run tests
         env:
           ENVIRONMENT: "dev"
-        run: pytest test_main.py
+        run: pytest -q
 
   build:
     name: Build and push image
@@ -148,7 +148,7 @@ jobs:
           EOF
 
   deploy_prod:
-    name: Deploy production
+    name: Deploy prod
     needs: deploy_dev
     runs-on: ubuntu-latest
     environment: prod
