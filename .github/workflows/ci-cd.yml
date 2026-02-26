@@ -141,7 +141,7 @@ jobs:
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
             cd /opt/actions-test
-            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose pull
             docker compose up -d
           EOF
