@@ -17,7 +17,7 @@ services:
    - prod_caddy_data:/data
    - prod_caddy_config:/config
   depends_on:
-   - prod-backend
+   - backend
   restart: unless-stopped
 
 volumes:
