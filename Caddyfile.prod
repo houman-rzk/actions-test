@@ -1,6 +1,6 @@
 one.projects.houman.xyz {
 
-  reverse_proxy backend:8000
+  reverse_proxy prod-backend:8000
 
   log {
     output stdout

@@ -1,0 +1,9 @@
+dev.one.projects.houman.xyz {
+
+  reverse_proxy dev-backend:8000
+
+  log {
+    output stdout
+    format console
+  }
+}

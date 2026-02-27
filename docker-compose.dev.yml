@@ -1,17 +1,19 @@
 services:
  backend:
   image: $IMAGE:$TAG
+  container_name: dev-backend
   environment:
    - ENVIRONMENT=dev
   restart: unless-stopped
 
  caddy:
   image: caddy:2.7
+  container_name: dev-caddy
   ports:
-   - "8080:80"
-   - "4443:443"
+   - "80:80"
+   - "443:443"
   volumes:
-   - ./Caddyfile:/etc/caddy/Caddyfile
+   - ./Caddyfile.dev:/etc/caddy/Caddyfile
    - caddy_data:/data
    - caddy_config:/config
   depends_on:
