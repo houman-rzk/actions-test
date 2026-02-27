@@ -14,12 +14,12 @@ services:
    - "443:443"
   volumes:
    - ./Caddyfile.prod:/etc/caddy/Caddyfile
-   - caddy_data:/data
-   - caddy_config:/config
+   - prod_caddy_data:/data
+   - prod_caddy_config:/config
   depends_on:
-   - backend
+   - prod-backend
   restart: unless-stopped
 
 volumes:
- caddy_data:
- caddy_config:
+ prod_caddy_data:
+ prod_caddy_config:
