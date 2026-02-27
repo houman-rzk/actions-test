@@ -1,14 +1,12 @@
 services:
  backend:
   image: $IMAGE:$TAG
-  container_name: backend
   environment:
    - ENVIRONMENT=prod
   restart: unless-stopped
 
  caddy:
   image: caddy:2.7
-  container_name: caddy
   ports:
    - "80:80"
    - "443:443"
