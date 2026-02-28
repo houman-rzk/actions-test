@@ -138,14 +138,14 @@ jobs:
 
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.dev.yml $SSH_USER@$SSH_HOST:/opt/actions-test
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no caddy/Caddyfile.dev $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/deploy.sh $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
+            export ENV=prod
             cd /opt/actions-test
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose -f docker-compose.dev.yml pull
-            docker compose -f docker-compose.dev.yml -p dev up -d
+            ./deploy.sh
           EOF
 
   deploy_prod:
@@ -176,12 +176,12 @@ jobs:
 
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.prod.yml $SSH_USER@$SSH_HOST:/opt/actions-test
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no caddy/Caddyfile.prod $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/deploy.sh $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
             export TAG=${{ env.tag }}
+            export ENV=prod
             cd /opt/actions-test
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml -p prod up -d
+            ./deploy.sh
           EOF
