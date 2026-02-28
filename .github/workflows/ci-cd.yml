@@ -137,7 +137,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
 
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.dev.yml $SSH_USER@$SSH_HOST:/opt/actions-test
-          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no Caddyfile.dev $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no caddy/Caddyfile.dev $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
@@ -175,7 +175,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
 
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.prod.yml $SSH_USER@$SSH_HOST:/opt/actions-test
-          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no Caddyfile.prod $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no caddy/Caddyfile.prod $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.image }}
