@@ -13,7 +13,7 @@ services:
    - "80:80"
    - "443:443"
   volumes:
-   - ./caddy/Caddyfile.prod:/etc/caddy/Caddyfile
+   - ./Caddyfile.prod:/etc/caddy/Caddyfile
    - prod_caddy_data:/data
    - prod_caddy_config:/config
   depends_on:
