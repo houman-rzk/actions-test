@@ -126,7 +126,7 @@ jobs:
           echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
-      - name: Deploy to dev
+      - name: Deploy
         env:
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}
@@ -167,7 +167,7 @@ jobs:
           echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
-      - name: Deploy to prod
+      - name: Deploy
         env:
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}

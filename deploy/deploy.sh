@@ -14,4 +14,4 @@ echo "Deploying $IMAGE:$TAG"
 echo "$TOKEN" | docker login ghcr.io -u "$USER" --password-stdin
 
 docker compose -f "$COMPOSE_FILE" pull
-docker compose -f "$COMPOSE_FILE" up -d
+docker compose -f "$COMPOSE_FILE" -p "$ENV" up -d
