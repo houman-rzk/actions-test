@@ -23,7 +23,8 @@ def health_check():
 def read_root():
   return JSONResponse(
     content={
-      "message": "Hello from FastAPI.",
+      "message": "Hello from FastAPI",
+      "other": "other",
       "environment": ENVIRONMENT
     }
   )
