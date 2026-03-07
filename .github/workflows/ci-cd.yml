@@ -53,9 +53,7 @@ jobs:
       - name: Set image metadata
         id: meta
         run: |
-          IMAGE=${{ env.IMAGE_NAME }}
           TAG="${GITHUB_SHA}"
-          echo "image=$IMAGE" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Login to GHCR
@@ -65,7 +63,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Optional but recommended: build cache for speed
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -99,7 +96,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.IMAGE_NAME }}:${{ needs.build.outputs.tag }}
           format: sarif
