@@ -137,6 +137,7 @@ jobs:
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.dev.yml $SSH_USER@$SSH_HOST:/opt/actions-test
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no caddy/Caddyfile.dev $SSH_USER@$SSH_HOST:/opt/actions-test
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/deploy.sh $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/rollback.sh $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             cd /opt/actions-test
@@ -173,6 +174,7 @@ jobs:
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no docker-compose.prod.yml $SSH_USER@$SSH_HOST:/opt/actions-test
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no caddy/Caddyfile.prod $SSH_USER@$SSH_HOST:/opt/actions-test
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/deploy.sh $SSH_USER@$SSH_HOST:/opt/actions-test
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/rollback.sh $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
             export IMAGE=${{ env.IMAGE_NAME }}

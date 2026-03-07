@@ -5,6 +5,11 @@ set -euo pipefail
 
 source ./.env
 
+mkdir -p .deploy >/dev/null 2>&1
+touch .deploy/current
+cp .deploy/current .deploy/previous
+echo "$TAG" > .deploy/current
+
 COMPOSE_FILE="docker-compose.$ENV.yml"
 
 echo "Deploying $IMAGE:$TAG"
