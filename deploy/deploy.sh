@@ -1,11 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-: "${IMAGE:?Missing IMAGE}"
 : "${TAG:?Missing TAG}"
-: "${ENV:?Missing ENV}"
-: "${TOKEN:?Missing TOKEN}"
-: "${USER:?Missing USER}"
+
+source ./.env
 
 COMPOSE_FILE="docker-compose.$ENV.yml"
 

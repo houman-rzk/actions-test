@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "master" ]
 
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
 jobs:
   test:
     name: Test
@@ -42,7 +45,6 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image: ${{ steps.meta.outputs.image }}
       tag: ${{ steps.meta.outputs.tag }}
 
     steps:
@@ -51,7 +53,7 @@ jobs:
       - name: Set image metadata
         id: meta
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}"
+          IMAGE=${{ env.IMAGE_NAME }}
           TAG="${GITHUB_SHA}"
           echo "image=$IMAGE" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
@@ -73,8 +75,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
-            ${{ steps.meta.outputs.image }}:latest
+            ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+            ${{ env.IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -99,7 +101,7 @@ jobs:
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.tag }}
+          image-ref: ${{ env.IMAGE_NAME }}:${{ needs.build.outputs.tag }}
           format: sarif
           output: trivy-results.sarif
           vuln-type: "os,library"
@@ -123,7 +125,6 @@ jobs:
       - name: Select image tag to deploy
         id: meta
         run: |
-          echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Deploy
@@ -141,13 +142,9 @@ jobs:
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/deploy.sh $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
-            export IMAGE=${{ env.image }}
-            export TAG=${{ env.tag }}
-            export ENV=dev
-            export USER=${{ github.actor }}
-            export TOKEN=${{ secrets.GITHUB_TOKEN }}
             cd /opt/actions-test
             chmod u+x deploy.sh
+            export TAG=${{ env.tag }}
             ./deploy.sh
           EOF
 
@@ -164,7 +161,6 @@ jobs:
       - name: Select image tag to deploy
         id: meta
         run: |
-          echo "image=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "tag=${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Deploy
@@ -182,7 +178,7 @@ jobs:
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no deploy/deploy.sh $SSH_USER@$SSH_HOST:/opt/actions-test
 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
-            export IMAGE=${{ env.image }}
+            export IMAGE=${{ env.IMAGE_NAME }}
             export TAG=${{ env.tag }}
             export ENV=prod
             export USER=${{ github.actor }}
