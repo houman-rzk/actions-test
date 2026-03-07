@@ -24,7 +24,6 @@ def read_root():
   return JSONResponse(
     content={
       "message": "Hello from FastAPI",
-      "other": "other",
       "environment": ENVIRONMENT
     }
   )
