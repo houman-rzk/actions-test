@@ -1,0 +1,25 @@
+services:
+ backend:
+  image: $IMAGE:$TAG
+  container_name: backend
+  environment:
+    - ENVIRONMENT: $ENV
+  restart: unless-stopped
+
+ caddy:
+  image: caddy:2.11-alpine
+  container_name: caddy
+  ports:
+   - "80:80"
+   - "443:443"
+  volumes:
+   - ./Caddyfile.$ENV:/etc/caddy/Caddyfile
+   - caddy_data:/data
+   - caddy_config:/config
+  depends_on:
+   - backend
+  restart: unless-stopped
+
+volumes:
+ caddy_data:
+ caddy_config:
