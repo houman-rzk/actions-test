@@ -10,7 +10,7 @@ touch .deploy/current
 cp .deploy/current .deploy/previous
 echo "$TAG" > .deploy/current
 
-COMPOSE_FILE="docker-compose.$ENV.yml"
+COMPOSE_FILE="docker-compose.yml"
 
 echo "Deploying $IMAGE:$TAG"
 
