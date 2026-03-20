@@ -3,7 +3,7 @@ services:
   image: $IMAGE:$TAG
   container_name: backend
   environment:
-    - ENVIRONMENT: $ENV
+    ENVIRONMENT: $ENV
   restart: unless-stopped
 
  caddy:
